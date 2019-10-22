@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, FlatList } from 'react-native';
 import Sentence from './Components/Sentence';
 
@@ -12,10 +12,15 @@ export default function App() {
     {id: '6', text: 'I work, and you?', position: 'left'},
     {id: '7', text: 'I study', position: 'right'},
     {id: '8', text: 'Where do you live?', position: 'left'},
-    {id: '9', text: 'I live in Stockholm!', position: 'right'},
+    {id: '9', text: 'I live in Stockholm! And you?', position: 'right'},
+    {id: '10', text: 'I live in Paris!', position: 'left'},
+    {id: '11', text: 'Great!', position: 'right'},
+    {id: '12', text: 'See you soon!', position: 'left'},
+    {id: '13', text: 'Bye bye!', position: 'right'},
   ]);
   const [index, setIndex] = useState(0);
   const [currentSentences, setCurrentSentences] = useState([]);
+  const flatList = useRef(null);
 
   function clickScreen() {
     let currSentences = [...currentSentences];
@@ -27,7 +32,13 @@ export default function App() {
       setIndex(0);
       setCurrentSentences([]);
     }
+    setTimeout(() => {
+      flatList.current.scrollToEnd({ animated: true});
+    }, 50);
   }
+
+  const renderSentences = (sentence) => (<Sentence style={styles.item} sentence={sentence.item.text} position={sentence.item.position}/>);
+
 
   return (
       
@@ -36,7 +47,8 @@ export default function App() {
         <FlatList
           keyExtractor={(item, index) =>item.id}
           data={currentSentences}
-          renderItem={itemData => (<Sentence style={styles.item} sentence={itemData.item.text} position={itemData.item.position}/>)}
+          renderItem={renderSentences}
+          ref={flatList}
         />
       </View>
     </TouchableWithoutFeedback>
